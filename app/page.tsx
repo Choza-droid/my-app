@@ -87,24 +87,24 @@ export default function MerchStore() {
           <div className="grid grid-cols-3 items-center h-16">
             {/* Home Button - Left */}
             <div className="flex justify-start">
-              <a href="#" className="bg-blue-500 hover:bg-blue-600 text-white px-6 py-2 rounded transition">
+              <a href="#" className="bg-red-500 hover:bg-red-600 text-white px-6 py-2 rounded transition">
                 Home
               </a>
             </div>
 
             {/* Logo - Center */}
             <div className="flex justify-center text-2xl font-bold">
-              <span className="text-blue-500">BRAND</span>MERCH
+              Güero <span className="text-red-500">Gucci</span>
             </div>
 
             {/* Cart Icon - Right */}
             <div className="flex justify-end items-center space-x-4">
-              <button className="relative hover:text-blue-500 transition">
+              <button className="relative hover:text-red-500 transition">
                 <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
                 </svg>
                 {cart.length > 0 && (
-                  <span className="absolute -top-2 -right-2 bg-blue-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
+                  <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
                     {cart.length}
                   </span>
                 )}
@@ -133,9 +133,9 @@ export default function MerchStore() {
         {mobileMenuOpen && (
           <div className="md:hidden border-t border-gray-800">
             <nav className="px-4 py-4 space-y-3">
-              <a href="#" className="block hover:text-blue-500 transition">Shop</a>
-              <a href="#" className="block hover:text-blue-500 transition">About</a>
-              <a href="#" className="block hover:text-blue-500 transition">Contact</a>
+              <a href="#" className="block hover:text-red-500 transition">Shop</a>
+              <a href="#" className="block hover:text-red-500 transition">About</a>
+              <a href="#" className="block hover:text-red-500 transition">Contact</a>
             </nav>
           </div>
         )}
@@ -174,7 +174,7 @@ export default function MerchStore() {
               {products.map((product) => (
                 <div 
                   key={product.id} 
-                  className="relative flex-shrink-0 group cursor-pointer"
+                  className="relative shrink-0 group cursor-pointer"
                   style={{ width: '180px' }}
                   onClick={() => openProductModal(product)}
                 >
@@ -214,7 +214,7 @@ export default function MerchStore() {
               {/* Product Info */}
               <div className="p-3">
                 <h3 className="text-sm font-semibold mb-1">{product.name}</h3>
-                <p className="text-lg font-bold text-blue-500">${product.price}</p>
+                <p className="text-lg font-bold text-red-500">${product.price}</p>
               </div>
             </div>
           ))}
@@ -249,7 +249,7 @@ export default function MerchStore() {
                 {/* Product Details */}
                 <div>
                   <h2 className="text-2xl font-bold mb-2">{selectedProduct.name}</h2>
-                  <p className="text-3xl font-bold text-blue-500 mb-6">${selectedProduct.price}</p>
+                  <p className="text-3xl font-bold text-red-500 mb-6">${selectedProduct.price}</p>
 
                   {/* Color Selection */}
                   <div className="mb-6">
@@ -261,7 +261,7 @@ export default function MerchStore() {
                           onClick={() => setSelectedColor(color)}
                           className={`px-4 py-2 rounded border ${
                             selectedColor === color 
-                              ? 'bg-blue-500 border-blue-500' 
+                              ? 'bg-red-500 border-blue-500' 
                               : 'bg-gray-800 border-gray-700 hover:border-gray-500'
                           }`}
                         >
@@ -281,7 +281,7 @@ export default function MerchStore() {
                           onClick={() => setSelectedSize(size)}
                           className={`px-4 py-2 rounded border ${
                             selectedSize === size 
-                              ? 'bg-blue-500 border-blue-500' 
+                              ? 'bg-red-500 border-blue-500' 
                               : 'bg-gray-800 border-gray-700 hover:border-gray-500'
                           }`}
                         >
@@ -297,7 +297,7 @@ export default function MerchStore() {
                     disabled={!selectedColor || !selectedSize}
                     className={`w-full py-4 rounded-lg font-semibold text-lg transition ${
                       selectedColor && selectedSize
-                        ? 'bg-blue-500 hover:bg-blue-600 text-white cursor-pointer'
+                        ? 'bg-red-500 hover:bg-red-600 text-white cursor-pointer'
                         : 'bg-gray-700 text-gray-500 cursor-not-allowed'
                     }`}
                   >
