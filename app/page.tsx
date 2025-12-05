@@ -111,23 +111,19 @@ export default function MerchStore() {
         )}
       </header>
 
-      {/* Hero Section with Video */}
+      {/* Hero Section with GIF Background */}
       <section className="relative h-screen overflow-hidden">
-        {/* Video Background */}
-        <video
-          autoPlay
-          loop
-          muted
-          className="absolute inset-0 w-full h-full object-cover z-0"
-        >
-          <source src="https://www.w3schools.com/html/mov_bbb.mp4" type="video/mp4" />
-        </video>
+        {/* GIF Background */}
+        <img 
+          src="/ouklfarjk9ib1.gif"
+    alt="Background animation"
+    className="absolute inset-0 w-full h-full object-cover"
+    style={{ zIndex: 1 }}
 
-        {/* Dark Overlay - adjusted opacity for clarity */}
-        <div className="absolute inset-0 bg-black bg-opacity-30 z-10"></div>
+        ></img>
 
         {/* Content */}
-        <div className="absolute inset-0 flex items-center justify-center z-20">
+        <div className="absolute inset-0 flex items-center justify-center" style={{ zIndex: 3 }}>
           <div className="text-center">
             <h1 className="text-5xl md:text-7xl font-bold mb-4">New Collection</h1>
             <p className="text-xl md:text-2xl mb-8">Limited Edition Drops</p>
