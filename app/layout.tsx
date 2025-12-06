@@ -1,10 +1,10 @@
-// app/layout.tsx
-import "./globals.css";
 import type { Metadata } from "next";
+import { CartProvider } from "./lib/CartContext";
+import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "Gucci Shop",
-  description: "A clean, modern landing page template for a waitlist.",
+  title: "Güero Gucci",
+  description: "Premium merchandise store",
 };
 
 export default function RootLayout({
@@ -13,9 +13,11 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" style={{ fontFamily: `"Courier New", Courier, monospace` }}>
-      <body className="bg-slate-950 text-slate-50 antialiased min-h-screen flex flex-col">
-        {children}
+    <html lang="en">
+      <body>
+        <CartProvider>
+          {children}
+        </CartProvider>
       </body>
     </html>
   );
