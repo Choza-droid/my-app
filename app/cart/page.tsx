@@ -32,12 +32,12 @@ export default function CartPage() {
         <div className="px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-3 items-center h-16">
             <div className="flex justify-start">
-              <Link href="/" className="bg-red-500 hover:bg-red-600 text-white px-6 py-2 rounded transition">
+              <Link href="/" className="bg-red-600 hover:bg-red-600 text-white px-6 py-2 rounded transition">
                 Back to Shop
               </Link>
             </div>
             <div className="flex justify-center text-2xl font-bold">
-              Güero <span className="text-red-500">Gucci</span>
+              Güero <span className="text-red-600">Gucci</span>
             </div>
             <div className="flex justify-end">
               <span className="text-gray-400">{cart.length} items</span>
@@ -64,11 +64,11 @@ export default function CartPage() {
                   <div className="flex-1">
                     <h3 className="text-xl font-semibold mb-2">{item.name}</h3>
                     <p className="text-gray-400 mb-2">Color: {item.color} | Size: {item.size}</p>
-                    <p className="text-2xl font-bold text-red-500">${item.price}</p>
+                    <p className="text-2xl font-bold text-red-600">${item.price}</p>
                   </div>
                   <button
                     onClick={() => removeFromCart(item.cartId)}
-                    className="text-gray-400 hover:text-red-500 transition h-fit"
+                    className="text-gray-400 hover:text-red-600 transition h-fit"
                   >
                     <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
@@ -82,11 +82,11 @@ export default function CartPage() {
             <div className="bg-gray-900 p-6 rounded-lg">
               <div className="flex justify-between items-center text-2xl font-bold mb-6">
                 <span>Total:</span>
-                <span className="text-red-500">${getTotalPrice()}</span>
+                <span className="text-red-600">${getTotalPrice()}</span>
               </div>
               <Link 
                 href="/checkout"
-                className="w-full bg-red-500 hover:bg-red-600 text-white py-4 rounded-lg font-semibold text-lg transition block text-center"
+                className="w-full bg-red-600 hover:bg-red-600 text-white py-4 rounded-lg font-semibold text-lg transition block text-center"
               >
                 Proceed to Checkout
               </Link>
