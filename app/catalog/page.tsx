@@ -5,10 +5,21 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useCart } from '../lib/CartContext';
 
+interface Product {
+  id: number;
+  name: string;
+  price: number;
+  category: string;
+  image: string;
+  colors: string[];
+  sizes: string[];
+  soldOut: boolean;
+}
+
 export default function CatalogPage() {
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [selectedProduct, setSelectedProduct] = useState<any>(null);
+  const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
   const [selectedColor, setSelectedColor] = useState('');
   const [selectedSize, setSelectedSize] = useState('');
   const [fadeOut, setFadeOut] = useState(false);
@@ -33,151 +44,53 @@ export default function CatalogPage() {
   };
 
   const categories = [
-    { id: 'all', name: 'All Products' },
-    { id: 'hats', name: 'Hats' },
-    { id: 't-shirts', name: 'T-Shirts' },
-    { id: 'hoodies', name: 'Hoodies' },
-    { id: 'pants', name: 'Pants' },
-    { id: 'jackets', name: 'Jackets' },
-    { id: 'accessories', name: 'Accessories' }
+    { id: 'all', name: 'Todos' },
+    { id: 'caps', name: 'Gorras' },
+    { id: 't-shirts', name: 'Playeras' }
   ];
 
   const allProducts = [
-    // Hats
+    // Gorras
     {
       id: 1,
-      name: "Tiger Stripe Cap",
-      price: 45,
-      category: 'hats',
-      image: "https://images.unsplash.com/photo-1588850561407-ed78c282e89b?w=500&q=80",
-      colors: ['Black', 'White', 'Red'],
-      sizes: ['One Size'],
+      name: "Gorra Negra Güero Gucci",
+      price: 28,
+      category: 'caps',
+      image: "/gorra_negra.jpg",
+      colors: ['Negro'],
+      sizes: ['Unitalla'],
       soldOut: false
     },
     {
       id: 2,
-      name: "Lion Pride Beanie",
-      price: 35,
-      category: 'hats',
-      image: "https://images.unsplash.com/photo-1576871337622-98d48d1cf531?w=500&q=80",
-      colors: ['Black', 'Gray'],
-      sizes: ['One Size'],
-      soldOut: true
+      name: "Gorra Blanca Güero Gucci",
+      price: 28,
+      category: 'caps',
+      image: "/gorra_blanca.jpg",
+      colors: ['Blanco'],
+      sizes: ['Unitalla'],
+      soldOut: false
     },
-    // T-Shirts
+    // Playeras
     {
       id: 3,
-      name: "Classic Logo Tee",
-      price: 35,
+      name: "Playera Negra Güero Gucci",
+      price: 50,
       category: 't-shirts',
-      image: "https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=500&q=80",
-      colors: ['Black', 'White', 'Red'],
-      sizes: ['S', 'M', 'L', 'XL'],
+      image: "/playera_negra.jpg",
+      colors: ['Negro'],
+      sizes: ['S', 'M', 'L'],
       soldOut: false
     },
     {
       id: 4,
-      name: "Vintage Logo Tee",
-      price: 40,
+      name: "Playera Blanca Güero Gucci",
+      price: 50,
       category: 't-shirts',
-      image: "https://images.unsplash.com/photo-1583743814966-8936f5b7be1a?w=500&q=80",
-      colors: ['Black', 'Gray'],
-      sizes: ['S', 'M', 'L', 'XL'],
+      image: "/playera_blanca.jpg",
+      colors: ['Blanco'],
+      sizes: ['S', 'M', 'L'],
       soldOut: false
-    },
-    {
-      id: 5,
-      name: "Street Art Tee",
-      price: 38,
-      category: 't-shirts',
-      image: "https://images.unsplash.com/photo-1622445275463-afa2ab738c34?w=500&q=80",
-      colors: ['White', 'Black'],
-      sizes: ['S', 'M', 'L', 'XL'],
-      soldOut: true
-    },
-    // Hoodies
-    {
-      id: 6,
-      name: "Tiger Stripe Hoodie",
-      price: 65,
-      category: 'hoodies',
-      image: "https://images.unsplash.com/photo-1556821840-3a63f95609a7?w=500&q=80",
-      colors: ['Black', 'White', 'Gray'],
-      sizes: ['S', 'M', 'L', 'XL'],
-      soldOut: false
-    },
-    {
-      id: 7,
-      name: "Panther Black Hoodie",
-      price: 70,
-      category: 'hoodies',
-      image: "https://images.unsplash.com/photo-1556821840-3a63f95609a7?w=500&q=80",
-      colors: ['Black', 'Navy', 'Gray'],
-      sizes: ['S', 'M', 'L', 'XL'],
-      soldOut: false
-    },
-    // Pants
-    {
-      id: 8,
-      name: "Cargo Pants",
-      price: 85,
-      category: 'pants',
-      image: "https://images.unsplash.com/photo-1624378439575-d8705ad7ae80?w=500&q=80",
-      colors: ['Black', 'Olive', 'Khaki'],
-      sizes: ['28', '30', '32', '34', '36'],
-      soldOut: false
-    },
-    {
-      id: 9,
-      name: "Denim Jeans",
-      price: 95,
-      category: 'pants',
-      image: "https://images.unsplash.com/photo-1542272454315-7f6fabf531a8?w=500&q=80",
-      colors: ['Blue', 'Black'],
-      sizes: ['28', '30', '32', '34', '36'],
-      soldOut: true
-    },
-    // Jackets
-    {
-      id: 10,
-      name: "Eagle Flight Jacket",
-      price: 120,
-      category: 'jackets',
-      image: "https://images.unsplash.com/photo-1551028719-00167b16eac5?w=500&q=80",
-      colors: ['Black', 'Brown', 'Green'],
-      sizes: ['S', 'M', 'L', 'XL'],
-      soldOut: false
-    },
-    {
-      id: 11,
-      name: "Bomber Jacket",
-      price: 110,
-      category: 'jackets',
-      image: "https://images.unsplash.com/photo-1591047139829-d91aecb6caea?w=500&q=80",
-      colors: ['Black', 'Navy'],
-      sizes: ['S', 'M', 'L', 'XL'],
-      soldOut: false
-    },
-    // Accessories
-    {
-      id: 12,
-      name: "Logo Backpack",
-      price: 75,
-      category: 'accessories',
-      image: "https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=500&q=80",
-      colors: ['Black', 'Gray'],
-      sizes: ['One Size'],
-      soldOut: false
-    },
-    {
-      id: 13,
-      name: "Chain Necklace",
-      price: 55,
-      category: 'accessories',
-      image: "https://images.unsplash.com/photo-1611591437281-460bfbe1220a?w=500&q=80",
-      colors: ['Silver', 'Gold'],
-      sizes: ['One Size'],
-      soldOut: true
     }
   ];
 
@@ -185,19 +98,29 @@ export default function CatalogPage() {
     ? allProducts 
     : allProducts.filter(p => p.category === selectedCategory);
 
-  const openProductModal = (product: any) => {
+  const openProductModal = (product: Product) => {
     if (product.soldOut) return;
     setSelectedProduct(product);
     setSelectedColor('');
     setSelectedSize('');
-    document.body.style.overflow = 'hidden';
   };
+
+  // Handle body overflow when modal opens/closes
+  useEffect(() => {
+    if (selectedProduct) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = 'unset';
+    }
+    return () => {
+      document.body.style.overflow = 'unset';
+    };
+  }, [selectedProduct]);
 
   const closeModal = () => {
     setSelectedProduct(null);
     setSelectedColor('');
     setSelectedSize('');
-    document.body.style.overflow = 'unset';
   };
 
   const handleAddToCart = () => {

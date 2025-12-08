@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useCart } from '../lib/CartContext';
@@ -9,11 +9,16 @@ export default function CartPage() {
   const { cart, removeFromCart, getTotalPrice } = useCart();
   const router = useRouter();
   const [fadeOut, setFadeOut] = useState(false);
+  const hasRedirected = useRef(false);
 
   useEffect(() => {
     // When cart becomes empty, fade out and redirect
-    if (cart.length === 0) {
-      setFadeOut(true);
+    if (cart.length === 0 && !hasRedirected.current) {
+      hasRedirected.current = true;
+      // Use setTimeout to avoid setState in effect
+      setTimeout(() => {
+        setFadeOut(true);
+      }, 0);
       setTimeout(() => {
         router.push('/');
       }, 600); // Wait for fade animation to complete
@@ -37,7 +42,7 @@ export default function CartPage() {
               </Link>
             </div>
             <div className="flex justify-center text-2xl font-bold">
-              Güero <span className="text-red-600">Gucci</span>
+              Güero<span className="text-red-600">Gucci</span>
             </div>
             <div className="flex justify-end">
               <span className="text-gray-400">{cart.length} items</span>
@@ -55,7 +60,7 @@ export default function CartPage() {
             {/* Cart Items */}
             <div className="space-y-4 mb-8">
               {cart.map((item) => (
-                <div key={item.cartId} className="flex gap-6 bg-gray-900 p-6 rounded-lg">
+                <div key={item.cartId} className="flex gap-6 bg-red-600 p-6 rounded-lg">
                   <img 
                     src={item.image} 
                     alt={item.name}
@@ -64,7 +69,7 @@ export default function CartPage() {
                   <div className="flex-1">
                     <h3 className="text-xl font-semibold mb-2">{item.name}</h3>
                     <p className="text-gray-400 mb-2">Color: {item.color} | Size: {item.size}</p>
-                    <p className="text-2xl font-bold text-red-600">${item.price}</p>
+                    <p className="text-2xl font-bold text-black">${item.price}</p>
                   </div>
                   <button
                     onClick={() => removeFromCart(item.cartId)}
@@ -79,7 +84,7 @@ export default function CartPage() {
             </div>
 
             {/* Total and Checkout */}
-            <div className="bg-gray-900 p-6 rounded-lg">
+            <div className="bg-gray-1000 p-6 rounded-lg">
               <div className="flex justify-between items-center text-2xl font-bold mb-6">
                 <span>Total:</span>
                 <span className="text-red-600">${getTotalPrice()}</span>
