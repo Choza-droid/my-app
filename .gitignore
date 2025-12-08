@@ -10,6 +10,13 @@
 !.yarn/releases
 !.yarn/versions
 
+SETUP_INSTRUCTIONS.md
+SECURITY_CHECKLIST.md
+README_FINAL.md
+CLEANUP.md
+IMPLEMENTION_SUMMARY.md
+GOOGLE_MAPS_SETUP.md
+
 # testing
 /coverage
 

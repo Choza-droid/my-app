@@ -5,20 +5,24 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useCart } from './lib/CartContext';
 
+interface Product {
+  id: number;
+  name: string;
+  price: number;
+  image: string;
+  colors: string[];
+  sizes: string[];
+}
+
 export default function MerchStore() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [selectedProduct, setSelectedProduct] = useState<any>(null);
+  const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
   const [selectedColor, setSelectedColor] = useState('');
   const [selectedSize, setSelectedSize] = useState('');
   const [fadeOut, setFadeOut] = useState(false);
 
   const { cart, addToCart } = useCart();
   const router = useRouter();
-
-  // Reset fadeOut when component mounts (page loads)
-  useEffect(() => {
-    setFadeOut(false);
-  }, []);
 
   const handleShopNowClick = (e: React.MouseEvent) => {
     e.preventDefault();
@@ -45,66 +49,60 @@ export default function MerchStore() {
   const products = [
     {
       id: 1,
-      name: "Tiger Stripe Hoodie",
-      price: 65,
-      image: "https://images.unsplash.com/photo-1556821840-3a63f95609a7?w=500&q=80",
-      colors: ['Black', 'White', 'Gray'],
-      sizes: ['S', 'M', 'L', 'XL']
+      name: "Gorra Negra Güero Gucci",
+      price: 28,
+      image: "/gorra_negra.jpg",
+      colors: ['Negro'],
+      sizes: ['Unitalla']
     },
     {
       id: 2,
-      name: "Lion Pride T-Shirt",
-      price: 35,
-      image: "https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=500&q=80",
-      colors: ['Black', 'White', 'Red'],
-      sizes: ['S', 'M', 'L', 'XL']
+      name: "Gorra Blanca Güero Gucci",
+      price: 28,
+      image: "/gorra_blanca.jpg",
+      colors: ['Blanco'],
+      sizes: ['Unitalla']
     },
     {
       id: 3,
-      name: "Panther Black Hoodie",
-      price: 70,
-      image: "https://images.unsplash.com/photo-1556821840-3a63f95609a7?w=500&q=80",
-      colors: ['Black', 'Navy', 'Gray'],
-      sizes: ['S', 'M', 'L', 'XL']
+      name: "Playera Negra Güero Gucci",
+      price: 50,
+      image: "/playera_negra.jpg",
+      colors: ['Negro'],
+      sizes: ['S', 'M', 'L']
     },
     {
       id: 4,
-      name: "Wolf Pack Polo",
-      price: 45,
-      image: "https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=500&q=80",
-      colors: ['White', 'Blue', 'Black'],
-      sizes: ['S', 'M', 'L', 'XL']
-    },
-    {
-      id: 5,
-      name: "Eagle Flight Jacket",
-      price: 85,
-      image: "https://images.unsplash.com/photo-1556821840-3a63f95609a7?w=500&q=80",
-      colors: ['Black', 'Brown', 'Green'],
-      sizes: ['S', 'M', 'L', 'XL']
-    },
-    {
-      id: 6,
-      name: "Shark Bite Tee",
-      price: 30,
-      image: "https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=500&q=80",
-      colors: ['Black', 'White', 'Gray'],
-      sizes: ['S', 'M', 'L', 'XL']
+      name: "Playera Blanca Güero Gucci",
+      price: 50,
+      image: "/playera_blanca.jpg",
+      colors: ['Blanco'],
+      sizes: ['S', 'M', 'L']
     }
   ];
 
-  const openProductModal = (product: any) => {
+  const openProductModal = (product: Product) => {
     setSelectedProduct(product);
     setSelectedColor('');
     setSelectedSize('');
-    document.body.style.overflow = 'hidden';
   };
+
+  // Handle body overflow when modal opens/closes
+  useEffect(() => {
+    if (selectedProduct) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = 'unset';
+    }
+    return () => {
+      document.body.style.overflow = 'unset';
+    };
+  }, [selectedProduct]);
 
   const closeModal = () => {
     setSelectedProduct(null);
     setSelectedColor('');
     setSelectedSize('');
-    document.body.style.overflow = 'unset';
   };
 
   const handleAddToCart = () => {
@@ -144,7 +142,7 @@ export default function MerchStore() {
 
             {/* Logo - Center */}
             <div className="flex justify-center text-2xl font-bold">
-              Güero <span className="text-red-600">Gucci</span>
+              Güero<span className="text-red-600">Gucci</span>
             </div>
 
             {/* Cart Icon - Right */}

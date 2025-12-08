@@ -25,34 +25,27 @@ interface CartContextType {
 const CartContext = createContext<CartContextType | undefined>(undefined);
 
 export function CartProvider({ children }: { children: ReactNode }) {
-  const [cart, setCart] = useState<CartItem[]>([]);
-  const [isLoaded, setIsLoaded] = useState(false);
-
-  // Load cart from localStorage on mount
-  useEffect(() => {
-    console.log('🔄 Loading cart from localStorage...');
-    const savedCart = localStorage.getItem('guero-gucci-cart');
-    console.log('📦 Saved cart:', savedCart);
-    if (savedCart) {
-      try {
-        const parsed = JSON.parse(savedCart);
-        console.log('✅ Parsed cart:', parsed);
-        setCart(parsed);
-      } catch (e) {
-        console.error('❌ Failed to load cart:', e);
-        setCart([]);
+  const [cart, setCart] = useState<CartItem[]>(() => {
+    // Initialize from localStorage if available
+    if (typeof window !== 'undefined') {
+      const savedCart = localStorage.getItem('guero-gucci-cart');
+      if (savedCart) {
+        try {
+          return JSON.parse(savedCart);
+        } catch (e) {
+          console.error('❌ Failed to load cart:', e);
+          return [];
+        }
       }
     }
-    setIsLoaded(true);
-  }, []);
+    return [];
+  });
 
   // Save cart to localStorage whenever it changes
   useEffect(() => {
-    if (isLoaded) {
-      console.log('💾 Saving cart to localStorage:', cart);
-      localStorage.setItem('guero-gucci-cart', JSON.stringify(cart));
-    }
-  }, [cart, isLoaded]);
+    console.log('💾 Saving cart to localStorage:', cart);
+    localStorage.setItem('guero-gucci-cart', JSON.stringify(cart));
+  }, [cart]);
 
   const addToCart = (item: CartItem) => {
     console.log('➕ Adding to cart:', item);
