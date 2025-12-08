@@ -3,9 +3,10 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { useCart } from './lib/CartContext';
+import { useCart } from '../lib/CartContext';
 
-export default function MerchStore() {
+export default function CatalogPage() {
+  const [selectedCategory, setSelectedCategory] = useState('all');
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState<any>(null);
   const [selectedColor, setSelectedColor] = useState('');
@@ -15,16 +16,11 @@ export default function MerchStore() {
   const { cart, addToCart } = useCart();
   const router = useRouter();
 
-  // Reset fadeOut when component mounts (page loads)
-  useEffect(() => {
-    setFadeOut(false);
-  }, []);
-
-  const handleShopNowClick = (e: React.MouseEvent) => {
+  const handleHomeClick = (e: React.MouseEvent) => {
     e.preventDefault();
     setFadeOut(true);
     setTimeout(() => {
-      router.push('/catalog');
+      router.push('/');
     }, 500);
   };
 
@@ -36,64 +32,161 @@ export default function MerchStore() {
     }, 500);
   };
 
-  const handleHomeClick = (e: React.MouseEvent) => {
-    e.preventDefault();
-    // Don't do anything if we're already on the home page
-    // Just let the link work normally without fade
-  };
+  const categories = [
+    { id: 'all', name: 'All Products' },
+    { id: 'hats', name: 'Hats' },
+    { id: 't-shirts', name: 'T-Shirts' },
+    { id: 'hoodies', name: 'Hoodies' },
+    { id: 'pants', name: 'Pants' },
+    { id: 'jackets', name: 'Jackets' },
+    { id: 'accessories', name: 'Accessories' }
+  ];
 
-  const products = [
+  const allProducts = [
+    // Hats
     {
       id: 1,
-      name: "Tiger Stripe Hoodie",
-      price: 65,
-      image: "https://images.unsplash.com/photo-1556821840-3a63f95609a7?w=500&q=80",
-      colors: ['Black', 'White', 'Gray'],
-      sizes: ['S', 'M', 'L', 'XL']
+      name: "Tiger Stripe Cap",
+      price: 45,
+      category: 'hats',
+      image: "https://images.unsplash.com/photo-1588850561407-ed78c282e89b?w=500&q=80",
+      colors: ['Black', 'White', 'Red'],
+      sizes: ['One Size'],
+      soldOut: false
     },
     {
       id: 2,
-      name: "Lion Pride T-Shirt",
+      name: "Lion Pride Beanie",
       price: 35,
-      image: "https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=500&q=80",
-      colors: ['Black', 'White', 'Red'],
-      sizes: ['S', 'M', 'L', 'XL']
+      category: 'hats',
+      image: "https://images.unsplash.com/photo-1576871337622-98d48d1cf531?w=500&q=80",
+      colors: ['Black', 'Gray'],
+      sizes: ['One Size'],
+      soldOut: true
     },
+    // T-Shirts
     {
       id: 3,
-      name: "Panther Black Hoodie",
-      price: 70,
-      image: "https://images.unsplash.com/photo-1556821840-3a63f95609a7?w=500&q=80",
-      colors: ['Black', 'Navy', 'Gray'],
-      sizes: ['S', 'M', 'L', 'XL']
+      name: "Classic Logo Tee",
+      price: 35,
+      category: 't-shirts',
+      image: "https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=500&q=80",
+      colors: ['Black', 'White', 'Red'],
+      sizes: ['S', 'M', 'L', 'XL'],
+      soldOut: false
     },
     {
       id: 4,
-      name: "Wolf Pack Polo",
-      price: 45,
-      image: "https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=500&q=80",
-      colors: ['White', 'Blue', 'Black'],
-      sizes: ['S', 'M', 'L', 'XL']
+      name: "Vintage Logo Tee",
+      price: 40,
+      category: 't-shirts',
+      image: "https://images.unsplash.com/photo-1583743814966-8936f5b7be1a?w=500&q=80",
+      colors: ['Black', 'Gray'],
+      sizes: ['S', 'M', 'L', 'XL'],
+      soldOut: false
     },
     {
       id: 5,
-      name: "Eagle Flight Jacket",
-      price: 85,
-      image: "https://images.unsplash.com/photo-1556821840-3a63f95609a7?w=500&q=80",
-      colors: ['Black', 'Brown', 'Green'],
-      sizes: ['S', 'M', 'L', 'XL']
+      name: "Street Art Tee",
+      price: 38,
+      category: 't-shirts',
+      image: "https://images.unsplash.com/photo-1622445275463-afa2ab738c34?w=500&q=80",
+      colors: ['White', 'Black'],
+      sizes: ['S', 'M', 'L', 'XL'],
+      soldOut: true
     },
+    // Hoodies
     {
       id: 6,
-      name: "Shark Bite Tee",
-      price: 30,
-      image: "https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=500&q=80",
+      name: "Tiger Stripe Hoodie",
+      price: 65,
+      category: 'hoodies',
+      image: "https://images.unsplash.com/photo-1556821840-3a63f95609a7?w=500&q=80",
       colors: ['Black', 'White', 'Gray'],
-      sizes: ['S', 'M', 'L', 'XL']
+      sizes: ['S', 'M', 'L', 'XL'],
+      soldOut: false
+    },
+    {
+      id: 7,
+      name: "Panther Black Hoodie",
+      price: 70,
+      category: 'hoodies',
+      image: "https://images.unsplash.com/photo-1556821840-3a63f95609a7?w=500&q=80",
+      colors: ['Black', 'Navy', 'Gray'],
+      sizes: ['S', 'M', 'L', 'XL'],
+      soldOut: false
+    },
+    // Pants
+    {
+      id: 8,
+      name: "Cargo Pants",
+      price: 85,
+      category: 'pants',
+      image: "https://images.unsplash.com/photo-1624378439575-d8705ad7ae80?w=500&q=80",
+      colors: ['Black', 'Olive', 'Khaki'],
+      sizes: ['28', '30', '32', '34', '36'],
+      soldOut: false
+    },
+    {
+      id: 9,
+      name: "Denim Jeans",
+      price: 95,
+      category: 'pants',
+      image: "https://images.unsplash.com/photo-1542272454315-7f6fabf531a8?w=500&q=80",
+      colors: ['Blue', 'Black'],
+      sizes: ['28', '30', '32', '34', '36'],
+      soldOut: true
+    },
+    // Jackets
+    {
+      id: 10,
+      name: "Eagle Flight Jacket",
+      price: 120,
+      category: 'jackets',
+      image: "https://images.unsplash.com/photo-1551028719-00167b16eac5?w=500&q=80",
+      colors: ['Black', 'Brown', 'Green'],
+      sizes: ['S', 'M', 'L', 'XL'],
+      soldOut: false
+    },
+    {
+      id: 11,
+      name: "Bomber Jacket",
+      price: 110,
+      category: 'jackets',
+      image: "https://images.unsplash.com/photo-1591047139829-d91aecb6caea?w=500&q=80",
+      colors: ['Black', 'Navy'],
+      sizes: ['S', 'M', 'L', 'XL'],
+      soldOut: false
+    },
+    // Accessories
+    {
+      id: 12,
+      name: "Logo Backpack",
+      price: 75,
+      category: 'accessories',
+      image: "https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=500&q=80",
+      colors: ['Black', 'Gray'],
+      sizes: ['One Size'],
+      soldOut: false
+    },
+    {
+      id: 13,
+      name: "Chain Necklace",
+      price: 55,
+      category: 'accessories',
+      image: "https://images.unsplash.com/photo-1611591437281-460bfbe1220a?w=500&q=80",
+      colors: ['Silver', 'Gold'],
+      sizes: ['One Size'],
+      soldOut: true
     }
   ];
 
+  const filteredProducts = selectedCategory === 'all' 
+    ? allProducts 
+    : allProducts.filter(p => p.category === selectedCategory);
+
   const openProductModal = (product: any) => {
+    if (product.soldOut) return;
     setSelectedProduct(product);
     setSelectedColor('');
     setSelectedSize('');
@@ -133,13 +226,12 @@ export default function MerchStore() {
           <div className="grid grid-cols-3 items-center h-16">
             {/* Home Button - Left */}
             <div className="flex justify-start">
-              <Link 
-                href="/" 
+              <button 
                 onClick={handleHomeClick}
                 className="bg-red-600 hover:bg-red-600 text-white px-6 py-2 rounded transition"
               >
                 Home
-              </Link>
+              </button>
             </div>
 
             {/* Logo - Center */}
@@ -150,18 +242,14 @@ export default function MerchStore() {
             {/* Cart Icon - Right */}
             <div className="flex justify-end items-center space-x-4">
               {cart.length > 0 ? (
-                <Link 
-                  href="/cart" 
-                  onClick={handleCartClick}
-                  className="relative hover:text-red-600 transition"
-                >
+                <button onClick={handleCartClick} className="relative hover:text-red-600 transition">
                   <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
                   </svg>
                   <span className="absolute -top-2 -right-2 bg-red-600 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
                     {cart.length}
                   </span>
-                </Link>
+                </button>
               ) : (
                 <div className="relative opacity-50 cursor-not-allowed">
                   <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -193,7 +281,7 @@ export default function MerchStore() {
         {mobileMenuOpen && (
           <div className="md:hidden border-t border-gray-800">
             <nav className="px-4 py-4 space-y-3">
-              <a href="#" className="block hover:text-red-600 transition">Shop</a>
+              <Link href="/catalog" className="block hover:text-red-600 transition">Shop</Link>
               <a href="#" className="block hover:text-red-600 transition">About</a>
               <a href="#" className="block hover:text-red-600 transition">Contact</a>
             </nav>
@@ -201,77 +289,90 @@ export default function MerchStore() {
         )}
       </header>
 
-      {/* Hero Section with GIF Background */}
-      <section className="relative h-screen overflow-hidden">
-        {/* GIF Background */}
-        <img 
-          src="/ouklfarjk9ib1.gif"
-          alt="Background animation"
-          className="absolute inset-0 w-full h-full object-cover"
-          style={{ zIndex: 1 }}
-        />
-
-        {/* Content */}
-        <div className="absolute inset-0 flex items-center justify-center" style={{ zIndex: 3 }}>
-          <div className="text-center">
-            <h1 className="text-5xl md:text-7xl font-bold mb-4">New Collection</h1>
-            <p className="text-xl md:text-2xl mb-8">Limited Edition Drops</p>
-            <button 
-              onClick={handleShopNowClick}
-              className="bg-white text-black px-8 py-3 rounded-full font-bold hover:bg-gray-200 transition"
-            >
-              Shop Now
-            </button>
+      {/* Category Filter */}
+      <div className="border-b border-gray-800 bg-black sticky top-16 z-40">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex overflow-x-auto py-4 gap-4 no-scrollbar">
+            {categories.map((category) => (
+              <button
+                key={category.id}
+                onClick={() => setSelectedCategory(category.id)}
+                className={`px-6 py-2 rounded whitespace-nowrap transition ${
+                  selectedCategory === category.id
+                    ? 'bg-red-600 text-white'
+                    : 'bg-gray-800 text-gray-300 hover:bg-gray-700'
+                }`}
+              >
+                {category.name}
+              </button>
+            ))}
           </div>
         </div>
-      </section>
+      </div>
 
-      {/* Featured Products Section - Supreme Style */}
-      <section className="py-16">
-        <h2 className="text-3xl md:text-4xl font-bold mb-12 text-center px-4">Featured Products</h2>
-        
-        {/* Desktop: Horizontal strips centered with scrollbar */}
-        <div className="hidden md:block">
-          <div className="max-w-6xl mx-auto px-4">
-            <div className="flex flex-row h-[600px] overflow-x-auto gap-1" style={{scrollbarWidth: 'thin'}}>
-              {products.map((product) => (
-                <div 
-                  key={product.id} 
-                  className="relative shrink-0 group cursor-pointer"
-                  style={{ width: '180px' }}
-                  onClick={() => openProductModal(product)}
-                >
-                  {/* Vertical Product Strip */}
-                  <div className="relative h-full overflow-hidden">
-                    <img 
-                      src={product.image} 
-                      alt={product.name}
-                      className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
-                    />
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
+      {/* Products Grid */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <h1 className="text-4xl font-bold mb-8">
+          {categories.find(c => c.id === selectedCategory)?.name}
+        </h1>
 
-        {/* Mobile: Grid Layout */}
-        <div className="md:hidden grid grid-cols-2 gap-4 px-4">
-          {products.map((product) => (
-            <div 
-              key={product.id} 
-              className="bg-gray-900 rounded-lg overflow-hidden cursor-pointer"
+        {/* Desktop View - Supreme Style (Image only with hover) */}
+        <div className="hidden md:grid md:grid-cols-3 lg:grid-cols-4 gap-4">
+          {filteredProducts.map((product) => (
+            <div
+              key={product.id}
               onClick={() => openProductModal(product)}
+              className={`relative group overflow-hidden bg-gray-900 ${
+                product.soldOut ? 'cursor-not-allowed' : 'cursor-pointer'
+              }`}
             >
               {/* Product Image */}
-              <div className="aspect-square bg-gray-800 overflow-hidden">
-                <img 
-                  src={product.image} 
+              <div className="aspect-square overflow-hidden">
+                <img
+                  src={product.image}
                   alt={product.name}
-                  className="w-full h-full object-cover"
+                  className={`w-full h-full object-cover transition-transform duration-300 ${
+                    product.soldOut ? 'opacity-60 grayscale' : 'group-hover:scale-105'
+                  }`}
                 />
               </div>
-              
+
+              {/* Hover Overlay - Desktop Only */}
+              {product.soldOut && (
+                <div className="absolute inset-0 bg-black bg-opacity-80 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                  <span className="text-2xl font-bold text-red-600">SOLD OUT</span>
+                </div>
+              )}
+            </div>
+          ))}
+        </div>
+
+        {/* Mobile View - Image with Name and Sold Out Badge */}
+        <div className="md:hidden grid grid-cols-2 gap-4">
+          {filteredProducts.map((product) => (
+            <div
+              key={product.id}
+              onClick={() => openProductModal(product)}
+              className={`bg-gray-900 rounded-lg overflow-hidden ${
+                product.soldOut ? 'cursor-not-allowed' : 'cursor-pointer'
+              }`}
+            >
+              {/* Product Image */}
+              <div className="aspect-square bg-gray-800 overflow-hidden relative">
+                <img
+                  src={product.image}
+                  alt={product.name}
+                  className={`w-full h-full object-cover ${
+                    product.soldOut ? 'opacity-60 grayscale' : ''
+                  }`}
+                />
+                {product.soldOut && (
+                  <div className="absolute top-2 right-2 bg-red-600 text-white text-xs font-bold px-2 py-1 rounded">
+                    SOLD OUT
+                  </div>
+                )}
+              </div>
+
               {/* Product Info */}
               <div className="p-3">
                 <h3 className="text-sm font-semibold mb-1">{product.name}</h3>
@@ -280,10 +381,16 @@ export default function MerchStore() {
             </div>
           ))}
         </div>
-      </section>
+
+        {filteredProducts.length === 0 && (
+          <div className="text-center py-12">
+            <p className="text-gray-400 text-xl">No products found in this category</p>
+          </div>
+        )}
+      </div>
 
       {/* Product Modal */}
-      {selectedProduct && (
+      {selectedProduct && !selectedProduct.soldOut && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4" onClick={closeModal}>
           <div className="absolute inset-0 bg-black opacity-50 backdrop-blur-sm"></div>
           <div className="absolute inset-0 bg-black opacity-50 backdrop-blur-sm"></div>
@@ -384,9 +491,9 @@ export default function MerchStore() {
             <div>
               <h3 className="text-xl font-bold mb-4">Shop</h3>
               <ul className="space-y-2 text-gray-400">
-                <li><a href="#" className="hover:text-white">New Arrivals</a></li>
-                <li><a href="#" className="hover:text-white">Best Sellers</a></li>
-                <li><a href="#" className="hover:text-white">Sale</a></li>
+                <li><Link href="/catalog" className="hover:text-white">New Arrivals</Link></li>
+                <li><Link href="/catalog" className="hover:text-white">Best Sellers</Link></li>
+                <li><Link href="/catalog" className="hover:text-white">Sale</Link></li>
               </ul>
             </div>
             <div>
