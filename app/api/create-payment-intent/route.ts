@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createCheckoutSession } from '@/app/lib/stripe';
-import { createOrder } from '@/app/lib/supabase';
 
 export async function POST(req: NextRequest) {
   try {
@@ -14,18 +13,12 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    // Crear la orden en Supabase primero
-    const order = await createOrder({
-      ...orderData,
-      payment_method: 'stripe',
-    });
+    // NO CREAR LA ORDEN AQUÍ
 
-    // Preparar los line items para Stripe
-    const lineItems = orderData.items.map((item: { name: string; color: string; size: string; price: number; image: string }) => {
-      // Construir URL absoluta para la imagen si es relativa
+    // Preparar line items
+    const lineItems = orderData.items.map((item: any) => {
       let imageUrl = item.image;
       if (imageUrl && imageUrl.startsWith('/')) {
-        // Es una ruta local, necesitamos hacer la URL absoluta
         const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000';
         imageUrl = `${baseUrl}${imageUrl}`;
       }
@@ -36,19 +29,18 @@ export async function POST(req: NextRequest) {
           product_data: {
             name: item.name,
             description: `Color: ${item.color}, Size: ${item.size}`,
-            // Solo incluir imágenes si son URLs válidas de HTTPS
             ...(imageUrl && (imageUrl.startsWith('https://') || imageUrl.startsWith('http://')) 
               ? { images: [imageUrl] } 
               : {}
             ),
           },
-          unit_amount: Math.round(item.price * 100), // Convertir a centavos
+          unit_amount: Math.round(item.price * 100),
         },
         quantity: 1,
       };
     });
 
-    // Agregar shipping como un line item
+    // Agregar shipping
     lineItems.push({
       price_data: {
         currency: 'usd',
@@ -61,7 +53,7 @@ export async function POST(req: NextRequest) {
       quantity: 1,
     });
 
-    // Agregar tax como un line item
+    // Agregar tax
     lineItems.push({
       price_data: {
         currency: 'usd',
@@ -74,41 +66,32 @@ export async function POST(req: NextRequest) {
       quantity: 1,
     });
 
-    // Crear Checkout Session en Stripe
+    // Generar número de orden único
+    const orderNumber = `ORD-${Date.now()}-${Math.random().toString(36).substr(2, 9).toUpperCase()}`;
+
+    // Crear sesión con metadata completo
     const session = await createCheckoutSession({
       lineItems,
       customerEmail: orderData.customer_email,
       metadata: {
-        order_id: order.id,
-        order_number: order.order_number,
+        order_number: orderNumber,
+        customer_name: orderData.customer_name,
+        customer_phone: orderData.customer_phone,
+        customer_email: orderData.customer_email,
+        shipping_address: JSON.stringify(orderData.shipping_address),
+        items: JSON.stringify(orderData.items),
+        totals: JSON.stringify(orderData.totals),
       },
     });
-
-    // Actualizar la orden con el session_id
-    const { supabaseAdmin } = await import('@/app/lib/supabase');
-    await supabaseAdmin
-      .from('orders')
-      .update({ payment_intent_id: session.id })
-      .eq('id', order.id);
 
     return NextResponse.json({
       sessionId: session.id,
       url: session.url,
-      orderId: order.id,
-      orderNumber: order.order_number,
+      orderNumber: orderNumber,
     });
   } catch (error: unknown) {
     console.error('❌ Error creating checkout session:', error);
     const errorMessage = error instanceof Error ? error.message : 'Internal server error';
-    if (error && typeof error === 'object' && 'message' in error) {
-      console.error('Error details:', {
-        message: (error as { message?: string }).message,
-        type: (error as { type?: string }).type,
-        code: (error as { code?: string }).code,
-        param: (error as { param?: string }).param,
-      });
-    }
-    
     return NextResponse.json(
       { error: errorMessage },
       { status: 500 }

@@ -24,6 +24,15 @@ export async function GET(req: NextRequest) {
       );
     }
 
+    // Verificar que el pago fue completado
+    if (session.payment_status !== 'paid') {
+      return NextResponse.json({
+        success: false,
+        message: 'Payment not completed',
+        payment_status: session.payment_status,
+      });
+    }
+
     // Buscar la orden en Supabase
     const { data: order, error } = await supabaseAdmin
       .from('orders')
@@ -32,44 +41,25 @@ export async function GET(req: NextRequest) {
       .single();
 
     if (error || !order) {
-      return NextResponse.json(
-        { error: 'Order not found' },
-        { status: 404 }
-      );
-    }
-
-    // Verificar si el pago fue exitoso
-    if (session.payment_status === 'paid') {
-      // Actualizar el estado si aún está pendiente
-      if (order.payment_status !== 'completed') {
-        await supabaseAdmin
-          .from('orders')
-          .update({
-            payment_status: 'completed',
-            order_status: 'processing',
-            updated_at: new Date().toISOString(),
-          })
-          .eq('id', order.id);
-        
-        order.payment_status = 'completed';
-        order.order_status = 'processing';
-      }
-
-      return NextResponse.json({
-        success: true,
-        order: order,
-        session: {
-          payment_status: session.payment_status,
-          customer_email: session.customer_email,
-        },
-      });
-    } else {
+      // Si la orden no existe, el webhook aún no ha procesado el pago
+      // Esto es normal - puede tomar unos segundos
       return NextResponse.json({
         success: false,
-        message: 'Payment not completed',
+        message: 'Order is being processed. Please refresh in a moment.',
         payment_status: session.payment_status,
+        processing: true,
       });
     }
+
+    // Orden encontrada y pago confirmado
+    return NextResponse.json({
+      success: true,
+      order: order,
+      session: {
+        payment_status: session.payment_status,
+        customer_email: session.customer_email,
+      },
+    });
   } catch (error: unknown) {
     console.error('Error verifying payment:', error);
     const errorMessage = error instanceof Error ? error.message : 'Failed to verify payment';
