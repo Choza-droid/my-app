@@ -223,7 +223,7 @@ export default function CatalogPage() {
                 className={`px-6 py-2 rounded whitespace-nowrap transition ${
                   selectedCategory === category.id
                     ? 'bg-red-600 text-white'
-                    : 'bg-gray-800 text-gray-300 hover:bg-gray-700'
+                    : 'bg-zinc-800 text-zinc-300 hover:bg-zinc-700'
                 }`}
               >
                 {category.name}
@@ -276,7 +276,7 @@ export default function CatalogPage() {
             <div
               key={product.id}
               onClick={() => openProductModal(product)}
-              className={`bg-gray-900 rounded-lg overflow-hidden ${
+              className={`bg-zinc-800 rounded-lg overflow-hidden ${
                 product.soldOut ? 'cursor-not-allowed' : 'cursor-pointer'
               }`}
             >
@@ -317,7 +317,7 @@ export default function CatalogPage() {
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4" onClick={closeModal}>
           <div className="absolute inset-0 bg-black opacity-50 backdrop-blur-sm"></div>
           <div className="absolute inset-0 bg-black opacity-50 backdrop-blur-sm"></div>
-          <div className="bg-gray-900 rounded-lg max-w-2xl w-full max-h-[90vh] overflow-y-auto relative z-10" onClick={(e) => e.stopPropagation()}>
+          <div className="bg-zinc-800 rounded-lg max-w-2xl w-full max-h-[90vh] overflow-y-auto relative z-10" onClick={(e) => e.stopPropagation()}>
             <div className="p-6">
               {/* Close Button */}
               <button 
@@ -355,7 +355,7 @@ export default function CatalogPage() {
                           className={`px-4 py-2 rounded border transition ${
                             selectedColor === color 
                               ? 'bg-red-600 border-red-600 text-white' 
-                              : 'bg-gray-800 border-gray-700 hover:border-red-600'
+                              : 'bg-zinc-600 border-zinc-700 hover:border-red-600'
                           }`}
                         >
                           {color}
@@ -375,7 +375,7 @@ export default function CatalogPage() {
                           className={`px-4 py-2 rounded border transition ${
                             selectedSize === size 
                               ? 'bg-red-600 border-red-600 text-white' 
-                              : 'bg-gray-800 border-gray-700 hover:border-red-600'
+                              : 'bg-zinc-600 border-zinc-700 hover:border-red-600'
                           }`}
                         >
                           {size}
@@ -391,7 +391,7 @@ export default function CatalogPage() {
                     className={`w-full py-4 rounded-lg font-semibold text-lg transition ${
                       selectedColor && selectedSize
                         ? 'bg-red-600 hover:bg-red-600 text-white cursor-pointer'
-                        : 'bg-gray-700 text-gray-500 cursor-not-allowed'
+                        : 'bg-zinc-700 text-zinc-400 cursor-not-allowed'
                     }`}
                   >
                     {!selectedColor || !selectedSize ? 'Select Color & Size' : 'Add to Cart'}
@@ -403,32 +403,32 @@ export default function CatalogPage() {
         </div>
       )}
 
-      {/* Footer */}
+            {/* Footer */}
       <footer className="border-t border-gray-800 mt-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
           <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
             <div>
-              <h3 className="text-xl font-bold mb-4">About Us</h3>
-              <p className="text-gray-400">Premium quality merchandise for true fans.</p>
+              <h3 className="text-xl font-bold mb-4">Acerca de Nosotros</h3>
+              <p className="text-gray-400">Mercancía de calidad premium para verdaderos fans.</p>
             </div>
             <div>
-              <h3 className="text-xl font-bold mb-4">Shop</h3>
+              <h3 className="text-xl font-bold mb-4">Tienda</h3>
               <ul className="space-y-2 text-gray-400">
-                <li><Link href="/catalog" className="hover:text-white">New Arrivals</Link></li>
-                <li><Link href="/catalog" className="hover:text-white">Best Sellers</Link></li>
-                <li><Link href="/catalog" className="hover:text-white">Sale</Link></li>
+                <li><a href="#" className="hover:text-white">Nuevos Productos</a></li>
+                <li><a href="#" className="hover:text-white">Más Vendidos</a></li>
+                <li><a href="#" className="hover:text-white">Ofertas</a></li>
               </ul>
             </div>
             <div>
-              <h3 className="text-xl font-bold mb-4">Support</h3>
+              <h3 className="text-xl font-bold mb-4">Soporte</h3>
               <ul className="space-y-2 text-gray-400">
-                <li><a href="#" className="hover:text-white">Contact Us</a></li>
-                <li><a href="#" className="hover:text-white">Shipping</a></li>
-                <li><a href="#" className="hover:text-white">Returns</a></li>
+                <li><a href="#" className="hover:text-white">Contáctanos</a></li>
+                <li><a href="#" className="hover:text-white">Envíos</a></li>
+                <li><a href="#" className="hover:text-white">Devoluciones</a></li>
               </ul>
             </div>
             <div>
-              <h3 className="text-xl font-bold mb-4">Follow Us</h3>
+              <h3 className="text-xl font-bold mb-4">Síguenos</h3>
               <ul className="space-y-2 text-gray-400">
                 <li><a href="#" className="hover:text-white">Instagram</a></li>
                 <li><a href="#" className="hover:text-white">Twitter</a></li>
@@ -437,7 +437,7 @@ export default function CatalogPage() {
             </div>
           </div>
           <div className="border-t border-gray-800 mt-8 pt-8 text-center text-gray-400">
-            <p>&copy; 2024 Güero Gucci. All rights reserved.</p>
+            <p>&copy; 2024 Güero Gucci. Todos los derechos reservados.</p>
           </div>
         </div>
       </footer>

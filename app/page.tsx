@@ -24,6 +24,18 @@ export default function MerchStore() {
   const { cart, addToCart } = useCart();
   const router = useRouter();
 
+  // Scroll to top when component mounts or page reloads
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: 'instant' });
+  }, []);
+
+  // Also ensure scroll to top on page load
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      window.history.scrollRestoration = 'manual';
+    }
+  }, []);
+
   const handleShopNowClick = (e: React.MouseEvent) => {
     e.preventDefault();
     setFadeOut(true);
@@ -42,8 +54,8 @@ export default function MerchStore() {
 
   const handleHomeClick = (e: React.MouseEvent) => {
     e.preventDefault();
-    // Don't do anything if we're already on the home page
-    // Just let the link work normally without fade
+    // Scroll to top smoothly
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   const products = [
@@ -134,7 +146,7 @@ export default function MerchStore() {
               <Link 
                 href="/" 
                 onClick={handleHomeClick}
-                className="bg-red-600 hover:bg-red-600 text-white px-6 py-2 rounded transition"
+                className="bg-red-600 hover:bg-red-700 text-white px-6 py-2 rounded transition"
               >
                 Home
               </Link>
@@ -191,9 +203,9 @@ export default function MerchStore() {
         {mobileMenuOpen && (
           <div className="md:hidden border-t border-gray-800">
             <nav className="px-4 py-4 space-y-3">
-              <a href="#" className="block hover:text-red-600 transition">Shop</a>
-              <a href="#" className="block hover:text-red-600 transition">About</a>
-              <a href="#" className="block hover:text-red-600 transition">Contact</a>
+              <a href="#" className="block hover:text-red-600 transition">Tienda</a>
+              <a href="#" className="block hover:text-red-600 transition">Acerca de</a>
+              <a href="#" className="block hover:text-red-600 transition">Contacto</a>
             </nav>
           </div>
         )}
@@ -212,13 +224,13 @@ export default function MerchStore() {
         {/* Content */}
         <div className="absolute inset-0 flex items-center justify-center" style={{ zIndex: 3 }}>
           <div className="text-center">
-            <h1 className="text-5xl md:text-7xl font-bold mb-4">New Collection</h1>
-            <p className="text-xl md:text-2xl mb-8">Limited Edition Drops</p>
+            <h1 className="text-5xl md:text-7xl font-bold mb-4">Nueva Colección</h1>
+            <p className="text-xl md:text-2xl mb-8">Edición Limitada</p>
             <button 
               onClick={handleShopNowClick}
               className="bg-white text-black px-8 py-3 rounded-full font-bold hover:bg-gray-200 transition"
             >
-              Shop Now
+              Comprar Ahora
             </button>
           </div>
         </div>
@@ -226,12 +238,15 @@ export default function MerchStore() {
 
       {/* Featured Products Section - Supreme Style */}
       <section className="py-16">
-        <h2 className="text-3xl md:text-4xl font-bold mb-12 text-center px-4">Featured Products</h2>
+        <h2 className="text-3xl md:text-4xl font-bold mb-12 text-center px-4">Productos Destacados</h2>
         
-        {/* Desktop: Horizontal strips centered with scrollbar */}
+        {/* Desktop: Centered horizontal strips with scrollbar when needed */}
         <div className="hidden md:block">
           <div className="max-w-6xl mx-auto px-4">
-            <div className="flex flex-row h-[600px] overflow-x-auto gap-1" style={{scrollbarWidth: 'thin'}}>
+            <div 
+              className="flex flex-row h-[600px] overflow-x-auto gap-1 justify-center"
+              style={{scrollbarWidth: 'thin'}}
+            >
               {products.map((product) => (
                 <div 
                   key={product.id} 
@@ -258,7 +273,7 @@ export default function MerchStore() {
           {products.map((product) => (
             <div 
               key={product.id} 
-              className="bg-gray-900 rounded-lg overflow-hidden cursor-pointer"
+              className="bg-zinc-800 rounded-lg overflow-hidden cursor-pointer"
               onClick={() => openProductModal(product)}
             >
               {/* Product Image */}
@@ -285,7 +300,7 @@ export default function MerchStore() {
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4" onClick={closeModal}>
           <div className="absolute inset-0 bg-black opacity-50 backdrop-blur-sm"></div>
           <div className="absolute inset-0 bg-black opacity-50 backdrop-blur-sm"></div>
-          <div className="bg-gray-900 rounded-lg max-w-2xl w-full max-h-[90vh] overflow-y-auto relative z-10" onClick={(e) => e.stopPropagation()}>
+          <div className="bg-zinc-800 border-zinc-500 rounded-lg max-w-2xl w-full max-h-[90vh] overflow-y-auto relative z-10" onClick={(e) => e.stopPropagation()}>
             <div className="p-6">
               {/* Close Button */}
               <button 
@@ -323,7 +338,7 @@ export default function MerchStore() {
                           className={`px-4 py-2 rounded border transition ${
                             selectedColor === color 
                               ? 'bg-red-600 border-red-600 text-white' 
-                              : 'bg-gray-800 border-gray-700 hover:border-red-600'
+                              : 'bg-zinc-500 border-zinc-600 hover:border-red-600'
                           }`}
                         >
                           {color}
@@ -334,7 +349,7 @@ export default function MerchStore() {
 
                   {/* Size Selection */}
                   <div className="mb-6">
-                    <label className="block text-sm font-semibold mb-2">Size</label>
+                    <label className="block text-sm font-semibold mb-2">Talla</label>
                     <div className="flex gap-2 flex-wrap">
                       {selectedProduct.sizes.map((size: string) => (
                         <button
@@ -343,7 +358,7 @@ export default function MerchStore() {
                           className={`px-4 py-2 rounded border transition ${
                             selectedSize === size 
                               ? 'bg-red-600 border-red-600 text-white' 
-                              : 'bg-gray-800 border-gray-700 hover:border-red-600'
+                              : 'bg-zinc-500 border-zinc-600 hover:border-red-600'
                           }`}
                         >
                           {size}
@@ -358,11 +373,11 @@ export default function MerchStore() {
                     disabled={!selectedColor || !selectedSize}
                     className={`w-full py-4 rounded-lg font-semibold text-lg transition ${
                       selectedColor && selectedSize
-                        ? 'bg-red-600 hover:bg-red-600 text-white cursor-pointer'
-                        : 'bg-gray-700 text-gray-500 cursor-not-allowed'
+                        ? 'bg-red-600 hover:bg-red-700 text-white cursor-pointer'
+                        : 'bg-zinc-700 text-zinc-500 cursor-not-allowed'
                     }`}
                   >
-                    {!selectedColor || !selectedSize ? 'Select Color & Size' : 'Add to Cart'}
+                    {!selectedColor || !selectedSize ? 'Selecciona Color y Talla' : 'Agregar al Carrito'}
                   </button>
                 </div>
               </div>
@@ -376,27 +391,27 @@ export default function MerchStore() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
           <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
             <div>
-              <h3 className="text-xl font-bold mb-4">About Us</h3>
-              <p className="text-gray-400">Premium quality merchandise for true fans.</p>
+              <h3 className="text-xl font-bold mb-4">Acerca de Nosotros</h3>
+              <p className="text-gray-400">Mercancía de calidad premium para verdaderos fans.</p>
             </div>
             <div>
-              <h3 className="text-xl font-bold mb-4">Shop</h3>
+              <h3 className="text-xl font-bold mb-4">Tienda</h3>
               <ul className="space-y-2 text-gray-400">
-                <li><a href="#" className="hover:text-white">New Arrivals</a></li>
-                <li><a href="#" className="hover:text-white">Best Sellers</a></li>
-                <li><a href="#" className="hover:text-white">Sale</a></li>
+                <li><a href="#" className="hover:text-white">Nuevos Productos</a></li>
+                <li><a href="#" className="hover:text-white">Más Vendidos</a></li>
+                <li><a href="#" className="hover:text-white">Ofertas</a></li>
               </ul>
             </div>
             <div>
-              <h3 className="text-xl font-bold mb-4">Support</h3>
+              <h3 className="text-xl font-bold mb-4">Soporte</h3>
               <ul className="space-y-2 text-gray-400">
-                <li><a href="#" className="hover:text-white">Contact Us</a></li>
-                <li><a href="#" className="hover:text-white">Shipping</a></li>
-                <li><a href="#" className="hover:text-white">Returns</a></li>
+                <li><a href="#" className="hover:text-white">Contáctanos</a></li>
+                <li><a href="#" className="hover:text-white">Envíos</a></li>
+                <li><a href="#" className="hover:text-white">Devoluciones</a></li>
               </ul>
             </div>
             <div>
-              <h3 className="text-xl font-bold mb-4">Follow Us</h3>
+              <h3 className="text-xl font-bold mb-4">Síguenos</h3>
               <ul className="space-y-2 text-gray-400">
                 <li><a href="#" className="hover:text-white">Instagram</a></li>
                 <li><a href="#" className="hover:text-white">Twitter</a></li>
@@ -405,7 +420,7 @@ export default function MerchStore() {
             </div>
           </div>
           <div className="border-t border-gray-800 mt-8 pt-8 text-center text-gray-400">
-            <p>&copy; 2024 Güero Gucci. All rights reserved.</p>
+            <p>&copy; 2024 Güero Gucci. Todos los derechos reservados.</p>
           </div>
         </div>
       </footer>
