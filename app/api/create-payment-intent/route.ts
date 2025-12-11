@@ -16,7 +16,7 @@ export async function POST(req: NextRequest) {
     // NO CREAR LA ORDEN AQUÍ
 
     // Preparar line items
-    const lineItems = orderData.items.map((item: any) => {
+    const lineItems = orderData.items.map((item: { id?: number; name: string; color: string; size: string; price: number; image?: string }) => {
       let imageUrl = item.image;
       if (imageUrl && imageUrl.startsWith('/')) {
         const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000';

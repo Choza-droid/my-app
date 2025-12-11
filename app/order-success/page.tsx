@@ -12,36 +12,19 @@ function OrderSuccessContent() {
   const [orderNumber, setOrderNumber] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [retryCount, setRetryCount] = useState(0);
-  const [orderDetails, setOrderDetails] = useState<{ 
-    order_number: string; 
-    customer_email: string; 
-    total_amount: number; 
+  const [orderDetails, setOrderDetails] = useState<{
+    order_number: string;
+    customer_email: string;
+    total_amount: number;
     payment_method: string;
-    order_items: Array<{ product_name: string; color: string; size: string; price: number }> 
+    order_items: Array<{ product_name: string; color: string; size: string; price: number }>
   } | null>(null);
-
-  useEffect(() => {
-    // Obtener el número de orden guardado
-    const savedOrderNumber = localStorage.getItem('pending_order_number');
-    if (savedOrderNumber) {
-      setOrderNumber(savedOrderNumber);
-      localStorage.removeItem('pending_order_number');
-    }
-
-    // IMPORTANTE: Limpiar el carrito SOLO cuando llegamos desde Stripe con session_id
-    if (sessionId) {
-      clearCart();
-      verifyStripePayment(sessionId);
-    } else {
-      setIsLoading(false);
-    }
-  }, [sessionId]);
 
   const verifyStripePayment = async (sessionId: string) => {
     try {
       const response = await fetch(`/api/verify-payment?session_id=${sessionId}`);
       const data = await response.json();
-      
+
       if (data.success) {
         setOrderDetails(data.order);
         setIsLoading(false);
@@ -59,6 +42,24 @@ function OrderSuccessContent() {
       setIsLoading(false);
     }
   };
+
+  useEffect(() => {
+    // Obtener el número de orden guardado
+    const savedOrderNumber = localStorage.getItem('pending_order_number');
+    if (savedOrderNumber) {
+      setOrderNumber(savedOrderNumber);
+      localStorage.removeItem('pending_order_number');
+    }
+
+    // IMPORTANTE: Limpiar el carrito SOLO cuando llegamos desde Stripe con session_id
+    if (sessionId) {
+      clearCart();
+      verifyStripePayment(sessionId);
+    } else {
+      setIsLoading(false);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [sessionId]);
 
   // Protección: Si no hay session_id, no permitir acceso
   if (!sessionId) {

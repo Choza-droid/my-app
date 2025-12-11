@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { constructStripeEvent } from '@/app/lib/stripe';
 import { supabaseAdmin } from '@/app/lib/supabase';
+import { sendOrderConfirmationEmail } from '@/app/lib/resend';
 
 export async function POST(req: NextRequest) {
   try {
@@ -17,9 +18,12 @@ export async function POST(req: NextRequest) {
     // Verificar el evento de Stripe
     const event = constructStripeEvent(body, signature);
 
+    console.log(`📥 Webhook received: ${event.type}`);
+
     switch (event.type) {
       case 'checkout.session.completed':
         const session = event.data.object;
+        console.log(`💳 Processing checkout.session.completed: ${session.id}`);
         
         // Verificar que el pago fue exitoso
         if (session.payment_status !== 'paid') {
@@ -27,6 +31,7 @@ export async function POST(req: NextRequest) {
           break;
         }
 
+        console.log(`✅ Payment confirmed for session: ${session.id}`);
         const metadata = session.metadata;
         
         if (!metadata) {
@@ -34,6 +39,7 @@ export async function POST(req: NextRequest) {
           break;
         }
 
+        console.log(`📦 Metadata found, processing order...`);
         try {
           // Parsear data del metadata
           const shippingAddress = JSON.parse(metadata.shipping_address);
@@ -48,10 +54,7 @@ export async function POST(req: NextRequest) {
               customer_name: metadata.customer_name,
               customer_email: metadata.customer_email,
               customer_phone: metadata.customer_phone,
-              shipping_address: shippingAddress.address,
-              shipping_city: shippingAddress.city,
-              shipping_state: shippingAddress.state,
-              shipping_zip: shippingAddress.zipCode,
+              shipping_address: shippingAddress, // Guardar todo el objeto como JSONB
               subtotal: totals.subtotal,
               shipping_cost: totals.shipping_cost,
               tax: totals.tax,
@@ -60,7 +63,6 @@ export async function POST(req: NextRequest) {
               payment_status: 'completed',
               order_status: 'processing',
               payment_intent_id: session.id,
-              stripe_payment_intent: session.payment_intent,
             }])
             .select()
             .single();
@@ -73,8 +75,9 @@ export async function POST(req: NextRequest) {
           console.log(`✅ Order created: ${order.order_number}`);
 
           // Crear items de la orden
-          const orderItems = items.map((item: any) => ({
+          const orderItems = items.map((item: { id?: number; name: string; color: string; size: string; price: number }) => ({
             order_id: order.id,
+            product_id: item.id || 0, // Usar 0 si no existe el id
             product_name: item.name,
             color: item.color,
             size: item.size,
@@ -88,10 +91,30 @@ export async function POST(req: NextRequest) {
 
           if (itemsError) {
             console.error('❌ Error creating order items:', itemsError);
+          } else {
+            console.log(`✅ Order items created for order: ${order.order_number}`);
+          }
+
+          // Enviar email de confirmación
+          const emailResult = await sendOrderConfirmationEmail({
+            orderNumber: order.order_number,
+            customerName: order.customer_name,
+            customerEmail: order.customer_email,
+            items: orderItems,
+            subtotal: order.subtotal,
+            shippingCost: order.shipping_cost,
+            tax: order.tax,
+            total: order.total_amount,
+            shippingAddress: order.shipping_address, // Ya es un objeto JSONB con todos los campos
+          });
+
+          if (emailResult.success) {
+            console.log(`📧 Confirmation email sent to ${order.customer_email}`);
+          } else {
+            console.error(`❌ Failed to send email: ${emailResult.error}`);
           }
 
           // TODO: Aquí agregar:
-          // - Enviar email de confirmación
           // - Actualizar inventario
           // - Notificar al admin
 

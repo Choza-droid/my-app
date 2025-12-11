@@ -288,7 +288,7 @@ export default function MerchStore() {
               {/* Product Info */}
               <div className="p-3">
                 <h3 className="text-sm font-semibold mb-1">{product.name}</h3>
-                <p className="text-lg font-bold text-red-600">${product.price}</p>
+                <p className="text-lg font-bold text-red-600">${product.price} usd</p>
               </div>
             </div>
           ))}
@@ -325,7 +325,7 @@ export default function MerchStore() {
                 {/* Product Details */}
                 <div>
                   <h2 className="text-2xl font-bold mb-2">{selectedProduct.name}</h2>
-                  <p className="text-3xl font-bold text-red-600 mb-6">${selectedProduct.price}</p>
+                  <p className="text-3xl font-bold text-red-600 mb-6">${selectedProduct.price} USD</p>
 
                   {/* Color Selection */}
                   <div className="mb-6">
@@ -411,16 +411,16 @@ export default function MerchStore() {
               </ul>
             </div>
             <div>
-              <h3 className="text-xl font-bold mb-4">Síguenos</h3>
+              <h3 className="text-xl font-bold mb-4">Sígueme</h3>
               <ul className="space-y-2 text-gray-400">
-                <li><a href="#" className="hover:text-white">Instagram</a></li>
-                <li><a href="#" className="hover:text-white">Twitter</a></li>
+                <li><a href="https://www.instagram.com/guero.gucci_/" target='blank_' className="hover:text-white">Instagram</a></li>
+                <li><a href="https://www.youtube.com/@g%C3%BCerogucci" target='blank_' className="hover:text-white">Youtube</a></li>
                 <li><a href="#" className="hover:text-white">TikTok</a></li>
               </ul>
             </div>
           </div>
           <div className="border-t border-gray-800 mt-8 pt-8 text-center text-gray-400">
-            <p>&copy; 2024 Güero Gucci. Todos los derechos reservados.</p>
+            <p>&copy; 2025 Güero Gucci. Todos los derechos reservados.</p>
           </div>
         </div>
       </footer>

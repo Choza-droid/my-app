@@ -9,13 +9,8 @@ export default function CartPage() {
   const { cart, removeFromCart, getTotalPrice } = useCart();
   const router = useRouter();
   const [fadeOut, setFadeOut] = useState(false);
-  const [fadeIn, setFadeIn] = useState(false);
+  const fadeIn = true; // Always fade in
   const hasRedirected = useRef(false);
-
-  // Fade in on mount
-  useEffect(() => {
-    setFadeIn(true);
-  }, []);
 
   useEffect(() => {
     // When cart becomes empty, fade out and redirect
@@ -87,7 +82,7 @@ export default function CartPage() {
                   <div className="flex-1">
                     <h3 className="text-xl font-semibold mb-2">{item.name}</h3>
                     <p className="text-gray-400 mb-2">Color: {item.color} | Talla: {item.size}</p>
-                    <p className="text-2xl font-bold text-red-600">${item.price}</p>
+                    <p className="text-2xl font-bold text-red-600">${item.price} USD</p>
                   </div>
                   <button
                     onClick={() => removeFromCart(item.cartId)}
@@ -105,7 +100,7 @@ export default function CartPage() {
             <div className="bg-zinc-800 p-6 rounded-lg">
               <div className="flex justify-between items-center text-2xl font-bold mb-6">
                 <span>Total:</span>
-                <span className="text-red-600">${getTotalPrice()}</span>
+                <span className="text-red-600">${getTotalPrice()} USD</span>
               </div>
               <Link 
                 href="/checkout"
